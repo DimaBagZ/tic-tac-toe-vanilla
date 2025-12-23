@@ -71,3 +71,12 @@ export enum PlayerType {
   HUMAN = "HUMAN",
   AI = "AI",
 }
+
+/**
+ * Уровень сложности ИИ
+ */
+export enum AIDifficulty {
+  EASY = "EASY",
+  MEDIUM = "MEDIUM",
+  HARD = "HARD",
+}

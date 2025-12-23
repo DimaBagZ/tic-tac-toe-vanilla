@@ -1,0 +1,113 @@
+/* Блок: userProfile */
+.userProfile {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Элемент: userProfile__header */
+.userProfile__header {
+  text-align: center;
+}
+
+/* Элемент: userProfile__title */
+.userProfile__title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+}
+
+/* Элемент: userProfile__content */
+.userProfile__content {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* Элемент: userProfile__avatarSection */
+.userProfile__avatarSection {
+  display: flex;
+  justify-content: center;
+}
+
+/* Элемент: userProfile__avatarWrapper */
+.userProfile__avatarWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Элемент: userProfile__avatarButton */
+.userProfile__avatarButton {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-accent);
+  background: var(--color-background-light);
+  border: 2px solid var(--color-accent);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.userProfile__avatarButton:hover {
+  background: var(--color-accent);
+  color: var(--color-background);
+  transform: translateY(-2px);
+}
+
+/* Элемент: userProfile__nameSection */
+.userProfile__nameSection {
+  padding: 20px;
+  background: var(--color-background-light);
+  border-radius: 12px;
+}
+
+/* Элемент: userProfile__settingsSection */
+.userProfile__settingsSection {
+  padding: 20px;
+  background: var(--color-background-light);
+  border-radius: 12px;
+}
+
+/* Элемент: userProfile__settingsTitle */
+.userProfile__settingsTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 16px 0;
+}
+
+/* Элемент: userProfile__modal */
+.userProfile__modal {
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .userProfile {
+    padding: 16px;
+    gap: 24px;
+  }
+
+  .userProfile__title {
+    font-size: 24px;
+  }
+
+  .userProfile__content {
+    gap: 24px;
+  }
+
+  .userProfile__nameSection,
+  .userProfile__settingsSection {
+    padding: 16px;
+  }
+}
+

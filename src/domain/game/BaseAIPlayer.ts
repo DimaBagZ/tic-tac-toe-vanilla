@@ -1,7 +1,8 @@
 /**
- * ИИ игрок
- * Реализует простую стратегию: блокировка, атака, случайный ход
- * Соблюдает принцип Single Responsibility и Open/Closed
+ * Базовый класс для ИИ игроков
+ * Содержит общую логику для всех уровней сложности
+ * Соблюдает принцип DRY
+ * Строгая типизация без использования any
  */
 
 import type { BoardState, Position } from "@/types/game.types";
@@ -11,10 +12,10 @@ import { GameValidator } from "./GameValidator";
 import { BOARD_SIZE, WINNING_LINES } from "@/utils/constants";
 
 /**
- * Класс ИИ игрока
+ * Базовый класс для ИИ игроков
  */
-export class AIPlayer implements IPlayer {
-  private readonly player: Player;
+export abstract class BaseAIPlayer implements IPlayer {
+  protected readonly player: Player;
 
   constructor(player: Player) {
     if (player === Player.EMPTY) {
@@ -24,60 +25,28 @@ export class AIPlayer implements IPlayer {
   }
 
   /**
-   * Делает ход
+   * Делает ход (абстрактный метод, должен быть реализован в наследниках)
    */
-  makeMove(board: BoardState): Position {
-    // 1. Попытка выиграть (атака)
-    const winningMove = this.findWinningMove(board);
-    if (winningMove) {
-      return winningMove;
-    }
+  abstract makeMove(board: BoardState): Position;
 
-    // 2. Блокировка противника
-    const blockingMove = this.findBlockingMove(board);
-    if (blockingMove) {
-      return blockingMove;
-    }
-
-    // 3. Захват центра (если свободен)
-    const center: Position = { row: 1, col: 1 };
-    if (GameValidator.isCellEmpty(board, center)) {
-      return center;
-    }
-
-    // 4. Захват угла (если свободен)
-    const corners: readonly Position[] = [
-      { row: 0, col: 0 },
-      { row: 0, col: 2 },
-      { row: 2, col: 0 },
-      { row: 2, col: 2 },
-    ];
-
-    const availableCorners = corners.filter((corner) =>
-      GameValidator.isCellEmpty(board, corner)
-    );
-
-    if (availableCorners.length > 0) {
-      return availableCorners[
-        Math.floor(Math.random() * availableCorners.length)
-      ];
-    }
-
-    // 5. Случайный доступный ход
-    return this.findRandomMove(board);
+  /**
+   * Возвращает тип игрока
+   */
+  getPlayerType(): PlayerType {
+    return PlayerType.AI;
   }
 
   /**
    * Находит выигрышный ход
    */
-  private findWinningMove(board: BoardState): Position | null {
+  protected findWinningMove(board: BoardState): Position | null {
     return this.findMoveForPlayer(board, this.player);
   }
 
   /**
    * Находит ход для блокировки противника
    */
-  private findBlockingMove(board: BoardState): Position | null {
+  protected findBlockingMove(board: BoardState): Position | null {
     const opponent = this.player === Player.X ? Player.O : Player.X;
     return this.findMoveForPlayer(board, opponent);
   }
@@ -85,7 +54,7 @@ export class AIPlayer implements IPlayer {
   /**
    * Находит ход для указанного игрока (для атаки или блокировки)
    */
-  private findMoveForPlayer(
+  protected findMoveForPlayer(
     board: BoardState,
     player: Player
   ): Position | null {
@@ -109,9 +78,28 @@ export class AIPlayer implements IPlayer {
   }
 
   /**
+   * Находит центр доски
+   */
+  protected getCenter(): Position {
+    return { row: 1, col: 1 };
+  }
+
+  /**
+   * Находит углы доски
+   */
+  protected getCorners(): readonly Position[] {
+    return [
+      { row: 0, col: 0 },
+      { row: 0, col: 2 },
+      { row: 2, col: 0 },
+      { row: 2, col: 2 },
+    ] as const;
+  }
+
+  /**
    * Находит случайный доступный ход
    */
-  private findRandomMove(board: BoardState): Position {
+  protected findRandomMove(board: BoardState): Position {
     const availableMoves: Position[] = [];
 
     for (let row = 0; row < BOARD_SIZE; row++) {
@@ -131,10 +119,21 @@ export class AIPlayer implements IPlayer {
   }
 
   /**
-   * Возвращает тип игрока
+   * Получить все доступные ходы
    */
-  getPlayerType(): PlayerType {
-    return PlayerType.AI;
+  protected getAvailableMoves(board: BoardState): readonly Position[] {
+    const availableMoves: Position[] = [];
+
+    for (let row = 0; row < BOARD_SIZE; row++) {
+      for (let col = 0; col < BOARD_SIZE; col++) {
+        const position: Position = { row, col };
+        if (GameValidator.isCellEmpty(board, position)) {
+          availableMoves.push(position);
+        }
+      }
+    }
+
+    return availableMoves;
   }
 }
 

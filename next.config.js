@@ -1,5 +1,17 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  // Настройки для более стабильной работы с несколькими клиентами
+  // Отключаем агрессивное кэширование в dev-режиме для избежания проблем с chunks
+  onDemandEntries: {
+    // Период в мс, в течение которого страницы остаются в памяти
+    maxInactiveAge: 25 * 1000,
+    // Количество страниц, которые должны оставаться одновременно
+    pagesBufferLength: 2,
+  },
+  // Явно указываем использование Turbopack (по умолчанию в Next.js 16)
+  // Это убирает предупреждение о конфликте с webpack
+  turbopack: {},
+};
 
 module.exports = nextConfig;
 

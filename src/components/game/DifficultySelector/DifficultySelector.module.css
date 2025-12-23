@@ -1,0 +1,99 @@
+/* Блок: difficultySelector */
+.difficultySelector {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+/* Элемент: difficultySelector__title */
+.difficultySelector__title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text);
+  text-align: center;
+  margin: 0;
+}
+
+/* Элемент: difficultySelector__grid */
+.difficultySelector__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  width: 100%;
+}
+
+/* Элемент: difficultySelector__item */
+.difficultySelector__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 16px;
+  background: var(--color-background-light);
+  border: 2px solid transparent;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.difficultySelector__item:hover {
+  border-color: var(--color-accent-light);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Модификатор: difficultySelector__item--selected */
+.difficultySelector__item--selected {
+  border-color: var(--color-accent);
+  background: var(--color-accent-light);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.difficultySelector__item--selected:hover {
+  transform: translateY(-2px);
+}
+
+/* Элемент: difficultySelector__emoji */
+.difficultySelector__emoji {
+  font-size: 32px;
+  line-height: 1;
+}
+
+/* Элемент: difficultySelector__label */
+.difficultySelector__label {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* Элемент: difficultySelector__description */
+.difficultySelector__description {
+  font-size: 14px;
+  color: var(--color-text-light);
+  line-height: 1.4;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .difficultySelector__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .difficultySelector__item {
+    padding: 16px;
+  }
+
+  .difficultySelector__emoji {
+    font-size: 28px;
+  }
+
+  .difficultySelector__label {
+    font-size: 16px;
+  }
+
+  .difficultySelector__description {
+    font-size: 13px;
+  }
+}

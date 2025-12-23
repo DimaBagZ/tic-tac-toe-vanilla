@@ -1,0 +1,217 @@
+/**
+ * Стили страницы дашборда
+ * БЭМ методология
+ */
+
+.main {
+  min-height: 100vh;
+  padding: 24px;
+  background: linear-gradient(135deg, var(--color-background), var(--color-accent));
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* Блок: header */
+.header {
+  background: var(--color-white);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px var(--color-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.header__user {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header__userInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.header__userName {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.header__userSubtitle {
+  font-size: 14px;
+  color: var(--color-text-light);
+  margin: 0;
+}
+
+.header__actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.header__link {
+  text-decoration: none;
+}
+
+/* Блок: section */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.section__title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+/* Блок: statisticsGrid */
+.statisticsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+/* Блок: chartContainer */
+.chartContainer {
+  margin-bottom: 24px;
+}
+
+/* Блок: difficultyGrid */
+.difficultyGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* Блок: difficultyCard */
+.difficultyCard {
+  background: var(--color-white);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px var(--color-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.difficultyCard__title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.difficultyCard__stats {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.difficultyCard__stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.difficultyCard__statLabel {
+  font-size: 14px;
+  color: var(--color-text-light);
+}
+
+.difficultyCard__statValue {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* Блок: difficultyCard__progress */
+.difficultyCard__progress {
+  height: 8px;
+  background: var(--color-border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.difficultyCard__progressBar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .main {
+    padding: 16px;
+  }
+
+  .container {
+    gap: 24px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+  }
+
+  .header__user {
+    width: 100%;
+  }
+
+  .header__link {
+    width: 100%;
+  }
+
+  .header__link button {
+    width: 100%;
+  }
+
+  .statisticsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+  }
+
+  .difficultyGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .section__title {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main {
+    padding: 12px;
+  }
+
+  .header {
+    padding: 16px;
+  }
+
+  .header__userName {
+    font-size: 24px;
+  }
+
+  .statisticsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
