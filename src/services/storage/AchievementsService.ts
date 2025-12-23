@@ -5,11 +5,7 @@
  */
 
 import { defaultStorageService } from "./StorageService";
-import {
-  STORAGE_KEYS,
-  STORAGE_VERSION,
-  AchievementType,
-} from "./StorageTypes";
+import { STORAGE_KEYS, STORAGE_VERSION, AchievementType } from "./StorageTypes";
 import type {
   Achievement,
   AchievementsData,
@@ -111,6 +107,42 @@ const ACHIEVEMENT_DEFINITIONS: readonly Achievement[] = [
     unlockedAt: null,
     progress: 0,
     maxProgress: 3,
+  },
+  {
+    id: AchievementType.FIRST_LOSS,
+    name: "Первый проигрыш",
+    description: "Проиграйте свою первую игру",
+    icon: "😔",
+    unlockedAt: null,
+    progress: 0,
+    maxProgress: 1,
+  },
+  {
+    id: AchievementType.FIRST_DRAW,
+    name: "Первая ничья",
+    description: "Сыграйте свою первую ничью",
+    icon: "🤝",
+    unlockedAt: null,
+    progress: 0,
+    maxProgress: 1,
+  },
+  {
+    id: AchievementType.TOTAL_LOSSES_10,
+    name: "Стойкость",
+    description: "Проиграйте 10 игр (показывает упорство)",
+    icon: "💪",
+    unlockedAt: null,
+    progress: 0,
+    maxProgress: 10,
+  },
+  {
+    id: AchievementType.TOTAL_DRAWS_5,
+    name: "Упорство",
+    description: "Сыграйте 5 ничьих",
+    icon: "⚖️",
+    unlockedAt: null,
+    progress: 0,
+    maxProgress: 5,
   },
 ] as const;
 
@@ -243,9 +275,11 @@ export class AchievementsService {
       case AchievementType.NO_LOSSES_5:
         // Проверяем последние 5 игр на отсутствие проигрышей
         const recentGames = gameHistory.slice(0, 5);
-        const noLosses = recentGames.length === 5 && recentGames.every(
-          (game) => game.result === GameResult.WIN || game.result === GameResult.DRAW
-        );
+        const noLosses =
+          recentGames.length === 5 &&
+          recentGames.every(
+            (game) => game.result === GameResult.WIN || game.result === GameResult.DRAW
+          );
         const noLossesCount = recentGames.filter(
           (game) => game.result === GameResult.WIN || game.result === GameResult.DRAW
         ).length;
@@ -262,6 +296,30 @@ export class AchievementsService {
         return {
           progress,
           unlocked: progress >= 3,
+        };
+
+      case AchievementType.FIRST_LOSS:
+        return {
+          progress: statistics.losses > 0 ? 1 : 0,
+          unlocked: statistics.losses >= 1,
+        };
+
+      case AchievementType.FIRST_DRAW:
+        return {
+          progress: statistics.draws > 0 ? 1 : 0,
+          unlocked: statistics.draws >= 1,
+        };
+
+      case AchievementType.TOTAL_LOSSES_10:
+        return {
+          progress: Math.min(statistics.losses, 10),
+          unlocked: statistics.losses >= 10,
+        };
+
+      case AchievementType.TOTAL_DRAWS_5:
+        return {
+          progress: Math.min(statistics.draws, 5),
+          unlocked: statistics.draws >= 5,
         };
 
       default:
@@ -293,9 +351,7 @@ export class AchievementsService {
     return (
       Array.isArray(d.achievements) &&
       typeof d.version === "number" &&
-      d.achievements.every((achievement: unknown) =>
-        this.isValidAchievement(achievement)
-      )
+      d.achievements.every((achievement: unknown) => this.isValidAchievement(achievement))
     );
   }
 
@@ -329,7 +385,6 @@ export class AchievementsService {
     }
 
     // Миграция: убедиться, что все достижения присутствуют
-    const existingIds = new Set(data.achievements.map((a) => a.id));
     const allAchievements = ACHIEVEMENT_DEFINITIONS.map((def) => {
       const existing = data.achievements.find((a) => a.id === def.id);
       return existing || { ...def, unlockedAt: null, progress: 0 };
@@ -357,4 +412,3 @@ export class AchievementsService {
  * Экземпляр сервиса по умолчанию
  */
 export const achievementsService = new AchievementsService();
-

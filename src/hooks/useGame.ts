@@ -100,7 +100,7 @@ export const useGame = (options?: UseGameOptions): UseGameReturn => {
             );
             const finalResult: GameResult =
               newGameState.winner?.player === PlayerEnum.O
-                ? GameResultEnum.IN_PROGRESS // Проигрыш игрока (компьютер выиграл)
+                ? GameResultEnum.LOSE // Проигрыш игрока (компьютер выиграл)
                 : GameResultEnum.DRAW; // Ничья
             options.onGameEnd(finalResult, difficulty, duration);
           }
@@ -165,7 +165,7 @@ export const useGame = (options?: UseGameOptions): UseGameReturn => {
               ? GameResultEnum.WIN // Игрок выиграл
               : result === GameResultEnum.DRAW
               ? GameResultEnum.DRAW // Ничья
-              : GameResultEnum.IN_PROGRESS; // Проигрыш игрока (компьютер выиграл)
+              : GameResultEnum.LOSE; // Проигрыш игрока (компьютер выиграл)
           options.onGameEnd(finalResult, difficulty, duration, generatedPromoCode || undefined);
         }
 

@@ -5,10 +5,17 @@
  */
 
 import React from "react";
-import Image from "next/image";
 import type { AvatarId } from "@/domain/avatar/AvatarPreset";
 import { AvatarRegistry } from "@/domain/avatar/AvatarRegistry";
 import styles from "./UserAvatar.module.css";
+
+/**
+ * Версия аватаров для обхода кэша браузера
+ * В dev режиме используем "dev" для обхода кэша, в production - фиксированную версию
+ */
+const AVATAR_VERSION = process.env.NODE_ENV === "development" 
+  ? "?v=dev&nocache=1" 
+  : "?v=1.0";
 
 export interface UserAvatarProps {
   readonly avatarId: AvatarId;
@@ -37,6 +44,9 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
 }) => {
   const avatar = AvatarRegistry.getById(avatarId);
 
+  // Добавляем версию к URL для обхода кэша браузера
+  const avatarUrl = avatar ? `${avatar.metadata.url}${AVATAR_VERSION}` : "";
+
   if (!avatar) {
     // Fallback на дефолтный аватар
     return (
@@ -50,21 +60,20 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
     );
   }
 
-  const sizePx = SIZE_MAP[size];
-
   return (
     <div
       className={`${styles.userAvatar} ${styles[`userAvatar--${size}`]} ${
         showBorder ? styles["userAvatar--bordered"] : ""
       } ${className || ""}`}
     >
-      <Image
-        src={avatar.metadata.url}
+      <img
+        src={avatarUrl}
         alt={avatar.metadata.name}
-        width={sizePx}
-        height={sizePx}
+        width={SIZE_MAP[size]}
+        height={SIZE_MAP[size]}
         className={styles.userAvatar__image}
-        priority={size === "large"}
+        loading={size === "large" ? "eager" : "lazy"}
+        key={avatarUrl} // Добавляем key для принудительного обновления при изменении URL
       />
     </div>
   );

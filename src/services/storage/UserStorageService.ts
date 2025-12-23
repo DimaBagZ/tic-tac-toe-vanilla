@@ -103,6 +103,22 @@ export class UserStorageService {
   }
 
   /**
+   * Удалить аккаунт пользователя (удаляет профиль, статистику, историю игр и достижения)
+   */
+  deleteAccount(): void {
+    // Удаляем профиль
+    this.storage.remove(STORAGE_KEYS.USER_PROFILE);
+    // Удаляем статистику
+    this.storage.remove(STORAGE_KEYS.STATISTICS);
+    // Удаляем историю игр
+    this.storage.remove(STORAGE_KEYS.GAME_HISTORY);
+    // Удаляем достижения
+    this.storage.remove(STORAGE_KEYS.ACHIEVEMENTS);
+    // Удаляем настройки (опционально, если они привязаны к аккаунту)
+    this.storage.remove(STORAGE_KEYS.SETTINGS);
+  }
+
+  /**
    * Получить настройки пользователя
    */
   getSettings(): UserSettings | null {

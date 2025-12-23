@@ -20,6 +20,7 @@ export interface UseUserProfileReturn {
   readonly updateAvatar: (avatarId: AvatarId) => void;
   readonly updateDifficulty: (difficulty: AIDifficulty) => void;
   readonly resetProfile: () => void;
+  readonly deleteAccount: () => void;
 }
 
 /**
@@ -145,6 +146,11 @@ export const useUserProfile = (): UseUserProfileReturn => {
     setProfile(newProfile);
   }, []);
 
+  const deleteAccount = useCallback((): void => {
+    userStorageService.deleteAccount();
+    setProfile(null);
+  }, []);
+
   return {
     profile,
     isLoading,
@@ -153,6 +159,7 @@ export const useUserProfile = (): UseUserProfileReturn => {
     updateAvatar,
     updateDifficulty,
     resetProfile,
+    deleteAccount,
   };
 };
 

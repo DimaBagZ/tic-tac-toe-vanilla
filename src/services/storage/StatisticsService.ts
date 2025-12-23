@@ -79,8 +79,18 @@ export class StatisticsService {
       return [];
     }
 
-    // Валидация элементов истории
-    const validHistory = history.filter((item) => this.isValidHistoryItem(item));
+    // Валидация и миграция элементов истории
+    const validHistory = history
+      .filter((item) => this.isValidHistoryItem(item))
+      .map((item) => this.migrateHistoryItem(item));
+
+    // Сохранить мигрированную историю, если были изменения
+    const hasChanges = validHistory.some(
+      (item, index) => item.result !== history[index]?.result
+    );
+    if (hasChanges) {
+      this.storage.set(STORAGE_KEYS.GAME_HISTORY, validHistory);
+    }
 
     return validHistory;
   }
@@ -164,10 +174,11 @@ export class StatisticsService {
     } else if (result === GameResult.DRAW) {
       draws += 1;
       currentStreak = 0;
-    } else {
+    } else if (result === GameResult.LOSE) {
       losses += 1;
       currentStreak = 0;
     }
+    // IN_PROGRESS не должен попадать в статистику
 
     // Вычислить процент побед
     const winRate = totalGames > 0 ? (wins / totalGames) * 100 : 0;
@@ -182,9 +193,10 @@ export class StatisticsService {
       difficultyWins += 1;
     } else if (result === GameResult.DRAW) {
       difficultyDraws += 1;
-    } else {
+    } else if (result === GameResult.LOSE) {
       difficultyLosses += 1;
     }
+    // IN_PROGRESS не должен попадать в статистику
 
     const difficultyTotal = difficultyWins + difficultyLosses + difficultyDraws;
     const difficultyWinRate =
@@ -256,6 +268,23 @@ export class StatisticsService {
       (i.duration === undefined || typeof i.duration === "number") &&
       (i.promoCode === undefined || typeof i.promoCode === "string")
     );
+  }
+
+  /**
+   * Миграция элемента истории (исправление старых данных)
+   * IN_PROGRESS в истории означает некорректные данные - исправляем на LOSE
+   */
+  private migrateHistoryItem(item: GameHistoryItem): GameHistoryItem {
+    // Если результат IN_PROGRESS, это некорректно для завершенной игры
+    // Исправляем на LOSE (проигрыш), так как победы сохранялись правильно
+    if (item.result === GameResult.IN_PROGRESS) {
+      return {
+        ...item,
+        result: GameResult.LOSE,
+      };
+    }
+
+    return item;
   }
 
   /**

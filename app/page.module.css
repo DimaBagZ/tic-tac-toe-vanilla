@@ -19,9 +19,10 @@
 
 /* Блок: header */
 .header {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
+  gap: 16px;
   margin-bottom: 16px;
   padding: 12px;
   background: var(--color-surface, rgba(255, 255, 255, 0.9));
@@ -29,20 +30,47 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Элемент: header__logo */
+/* Элемент: header__user - слева */
+.header__user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-self: start;
+}
+
+/* Элемент: header__logo - по центру */
 .header__logo {
   display: flex;
   align-items: center;
   justify-content: center;
+  justify-self: center;
 }
 
-/* Элемент: header__user */
-.header__user {
+/* Элемент: header__stats - справа */
+.header__stats {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 12px;
-  flex: 1;
+  justify-self: end;
+}
+
+/* Элемент: header__avatarLink */
+.header__avatarLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  border-radius: 50%;
+}
+
+.header__avatarLink:hover {
+  transform: scale(1.1);
+  opacity: 0.9;
+}
+
+.header__avatarLink:active {
+  transform: scale(1.05);
 }
 
 /* Элемент: header__userName */
@@ -54,18 +82,85 @@
 
 /* Элемент: header__dashboardLink */
 .header__dashboardLink {
-  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 14px;
   font-weight: 500;
   color: var(--color-primary);
   text-decoration: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  transition: background-color 0.2s ease;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .header__dashboardLink:hover {
   background-color: var(--color-accent);
+  transform: translateY(-2px);
+}
+
+/* Анимация иконки статистики при ховере кнопки */
+.header__dashboardLink:hover svg {
+  transform: scale(1.15) rotate(5deg);
+  color: var(--color-primary, #3b82f6);
+}
+
+.header__dashboardLink:hover svg path {
+  animation: chartPulse 0.8s ease-in-out infinite, chartBounce 0.5s ease;
+}
+
+.header__dashboardLink:hover svg circle {
+  animation: dotPulse 0.6s ease-in-out infinite, dotBounce 0.4s ease;
+}
+
+/* Keyframes для анимации иконки статистики */
+@keyframes chartPulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes dotPulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes chartBounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes dotBounce {
+  0%,
+  100% {
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    transform: scale(1.3) translateY(-3px);
+  }
+}
+
+/* Элемент: header__dashboardText */
+.header__dashboardText {
+  white-space: nowrap;
 }
 
 /* Элемент: header__title */
@@ -157,13 +252,31 @@
   }
 
   .header {
-    flex-direction: column;
-    gap: 12px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
   }
 
   .header__user {
-    width: 100%;
+    flex: 0 0 auto;
+    justify-self: auto;
+  }
+
+  .header__logo {
+    flex: 1 1 auto;
     justify-content: center;
+    justify-self: auto;
+  }
+
+  .header__stats {
+    flex: 0 0 auto;
+    justify-self: auto;
+  }
+
+  .header__dashboardText {
+    display: none; /* Скрываем текст на мобильных, оставляем только иконку */
   }
 
   .title {

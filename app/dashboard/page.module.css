@@ -166,21 +166,68 @@
   }
 
   .header {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 20px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    gap: 8px;
   }
 
   .header__user {
-    width: 100%;
+    flex: 1 1 auto;
+    min-width: 0; /* Позволяет сжиматься при необходимости */
+    gap: 12px;
+    overflow: hidden; /* Предотвращает выход за границы */
+  }
+
+  /* Уменьшаем аватар на мобильных */
+  .header__user :global(.userAvatar) {
+    flex-shrink: 0;
+  }
+
+  .header__user :global(.userAvatar--large) {
+    width: 64px !important;
+    height: 64px !important;
+  }
+
+  .header__userInfo {
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+  }
+
+  .header__userName {
+    font-size: 18px;
+    white-space: normal; /* Разрешаем перенос текста */
+    overflow: visible;
+    text-overflow: unset;
+    word-break: break-word;
+    line-height: 1.2;
+  }
+
+  .header__userSubtitle {
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .header__actions {
+    flex: 0 0 auto;
+    gap: 6px;
+    flex-wrap: nowrap;
   }
 
   .header__link {
-    width: 100%;
+    width: auto;
+    flex-shrink: 0;
   }
 
   .header__link button {
-    width: 100%;
+    width: auto;
+    font-size: 11px;
+    padding: 6px 8px;
+    white-space: nowrap;
   }
 
   .statisticsGrid {
@@ -203,11 +250,34 @@
   }
 
   .header {
-    padding: 16px;
+    padding: 10px;
+    gap: 6px;
+  }
+
+  .header__user {
+    gap: 8px;
+  }
+
+  .header__user :global(.userAvatar--large) {
+    width: 48px !important;
+    height: 48px !important;
   }
 
   .header__userName {
-    font-size: 24px;
+    font-size: 16px;
+  }
+
+  .header__userSubtitle {
+    display: none; /* Скрываем подзаголовок на очень маленьких экранах */
+  }
+
+  .header__actions {
+    gap: 4px;
+  }
+
+  .header__link button {
+    font-size: 10px;
+    padding: 5px 6px;
   }
 
   .statisticsGrid {

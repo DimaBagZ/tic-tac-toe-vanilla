@@ -78,6 +78,10 @@
   color: var(--color-success);
 }
 
+.recentGames__itemResult--lose {
+  color: var(--color-error);
+}
+
 .recentGames__itemResult--draw {
   color: var(--color-text-light);
 }
@@ -144,4 +148,3 @@
     flex-wrap: wrap;
   }
 }
-

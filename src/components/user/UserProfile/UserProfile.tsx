@@ -5,12 +5,14 @@
  */
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { UserAvatar } from "../UserAvatar/UserAvatar";
 import { AvatarSelector } from "../UserAvatar/AvatarSelector";
 import { UserNameInput } from "./UserNameInput";
 import { DifficultySelector } from "@/components/game/DifficultySelector";
 import { Modal } from "@/components/ui/Modal";
+import { Button } from "@/components/ui/Button";
 import type { AvatarId } from "@/domain/avatar/AvatarPreset";
 import { AvatarValidator } from "@/domain/avatar/AvatarValidator";
 import styles from "./UserProfile.module.css";
@@ -19,8 +21,10 @@ import styles from "./UserProfile.module.css";
  * Компонент профиля пользователя
  */
 export const UserProfile: React.FC = () => {
-  const { profile, updateName, updateAvatar, updateDifficulty } = useUserProfile();
+  const router = useRouter();
+  const { profile, updateName, updateAvatar, updateDifficulty, deleteAccount } = useUserProfile();
   const [showAvatarSelector, setShowAvatarSelector] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   if (!profile) {
     return (
@@ -33,6 +37,12 @@ export const UserProfile: React.FC = () => {
   const handleAvatarSelect = (avatarId: AvatarId): void => {
     updateAvatar(avatarId);
     setShowAvatarSelector(false);
+  };
+
+  const handleDeleteAccount = (): void => {
+    deleteAccount();
+    setShowDeleteConfirm(false);
+    router.push("/welcome");
   };
 
   // Валидация avatarId из профиля
@@ -55,7 +65,7 @@ export const UserProfile: React.FC = () => {
               className={styles.userProfile__avatarButton}
               onClick={() => setShowAvatarSelector(true)}
             >
-              Изменить аватар
+              ✏️ Выбрать другой аватар
             </button>
           </div>
         </div>
@@ -73,6 +83,21 @@ export const UserProfile: React.FC = () => {
             onSelect={updateDifficulty}
           />
         </div>
+
+        {/* Удаление аккаунта */}
+        <div className={styles.userProfile__dangerSection}>
+          <h3 className={styles.userProfile__dangerTitle}>Опасная зона</h3>
+          <p className={styles.userProfile__dangerDescription}>
+            Удаление аккаунта приведет к полному удалению вашего профиля, статистики, истории игр и всех достижений. Это действие нельзя отменить.
+          </p>
+          <Button
+            variant="outline"
+            onClick={() => setShowDeleteConfirm(true)}
+            className={styles.userProfile__deleteButton}
+          >
+            🗑️ Удалить аккаунт
+          </Button>
+        </div>
       </div>
 
       {/* Модальное окно выбора аватара */}
@@ -87,6 +112,48 @@ export const UserProfile: React.FC = () => {
             onSelect={handleAvatarSelect}
             onCancel={() => setShowAvatarSelector(false)}
           />
+        </Modal>
+      )}
+
+      {/* Модальное окно подтверждения удаления */}
+      {showDeleteConfirm && (
+        <Modal
+          isOpen={showDeleteConfirm}
+          onClose={() => setShowDeleteConfirm(false)}
+          className={styles.userProfile__modal}
+        >
+          <div className={styles.userProfile__deleteConfirm}>
+            <h3 className={styles.userProfile__deleteConfirmTitle}>
+              ⚠️ Подтверждение удаления аккаунта
+            </h3>
+            <p className={styles.userProfile__deleteConfirmText}>
+              Вы уверены, что хотите удалить свой аккаунт? Это действие удалит:
+            </p>
+            <ul className={styles.userProfile__deleteConfirmList}>
+              <li>Ваш профиль</li>
+              <li>Всю статистику игр</li>
+              <li>Историю игр</li>
+              <li>Все достижения</li>
+            </ul>
+            <p className={styles.userProfile__deleteConfirmWarning}>
+              Это действие нельзя отменить!
+            </p>
+            <div className={styles.userProfile__deleteConfirmActions}>
+              <Button
+                variant="outline"
+                onClick={() => setShowDeleteConfirm(false)}
+              >
+                Отмена
+              </Button>
+              <Button
+                variant="primary"
+                onClick={handleDeleteAccount}
+                className={styles.userProfile__deleteConfirmButton}
+              >
+                Да, удалить аккаунт
+              </Button>
+            </div>
+          </div>
         </Modal>
       )}
     </div>

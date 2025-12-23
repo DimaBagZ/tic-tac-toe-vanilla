@@ -23,6 +23,8 @@ function getResultIcon(result: GameResult): string {
   switch (result) {
     case GameResult.WIN:
       return "🎉";
+    case GameResult.LOSE:
+      return "😊";
     case GameResult.DRAW:
       return "🤝";
     case GameResult.IN_PROGRESS:
@@ -39,6 +41,8 @@ function getResultText(result: GameResult): string {
   switch (result) {
     case GameResult.WIN:
       return "Победа";
+    case GameResult.LOSE:
+      return "Проигрыш";
     case GameResult.DRAW:
       return "Ничья";
     case GameResult.IN_PROGRESS:

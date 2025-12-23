@@ -34,6 +34,7 @@ export type BoardState = readonly [
  */
 export enum GameResult {
   WIN = "WIN",
+  LOSE = "LOSE",
   DRAW = "DRAW",
   IN_PROGRESS = "IN_PROGRESS",
 }

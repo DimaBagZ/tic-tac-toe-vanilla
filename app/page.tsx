@@ -3,9 +3,11 @@
 /**
  * Главная страница игры
  * Интегрирует все компоненты
+ * Оптимизирована с lazy loading для модальных окон
  */
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import dynamic from "next/dynamic";
 import { useRouter, usePathname } from "next/navigation";
 import { useGame } from "@/hooks/useGame";
 import { useTelegram } from "@/hooks/useTelegram";
@@ -14,8 +16,6 @@ import { useStatistics } from "@/hooks/useStatistics";
 import { useAchievements } from "@/hooks/useAchievements";
 import { GameBoard } from "@/components/game/GameBoard";
 import { GameStatus } from "@/components/game/GameStatus";
-import { WinModal } from "@/components/modals/WinModal";
-import { LoseModal } from "@/components/modals/LoseModal";
 import { UserAvatar } from "@/components/user/UserAvatar";
 import { Button } from "@/components/ui/Button";
 import {
@@ -25,8 +25,28 @@ import {
 } from "@/types/game.types";
 import { AvatarValidator } from "@/domain/avatar/AvatarValidator";
 import { Logo } from "@/components/ui/Logo";
+import { StatsIcon } from "@/components/ui/StatsIcon";
 import Link from "next/link";
 import styles from "./page.module.css";
+
+// Lazy loading для модальных окон (не критичны для первого рендера)
+// Загружаем только при необходимости, без предзагрузки CSS
+const WinModal = dynamic(
+  () => import("@/components/modals/WinModal").then((mod) => ({ default: mod.WinModal })),
+  {
+    ssr: false,
+    // Не используем loading компонент, загружаем только когда нужно
+  }
+);
+
+const LoseModal = dynamic(
+  () =>
+    import("@/components/modals/LoseModal").then((mod) => ({ default: mod.LoseModal })),
+  {
+    ssr: false,
+    // Не используем loading компонент, загружаем только когда нужно
+  }
+);
 
 export default function Home() {
   const router = useRouter();
@@ -76,6 +96,30 @@ export default function Home() {
       }
     }
   }, [statistics.lastPlayed, statistics.totalGames, profile]);
+
+  // Мемоизация обработчиков для предотвращения лишних ре-рендеров
+  // ВАЖНО: Все хуки должны быть до условных возвратов (правила Hooks)
+  const handlePlayAgain = useCallback((): void => {
+    resetGame();
+    setShowWinModal(false);
+    setShowLoseModal(false);
+    setHasSentTelegramMessage(false);
+  }, [resetGame]);
+
+  const handleCloseWinModal = useCallback((): void => {
+    setShowWinModal(false);
+  }, []);
+
+  const handleCloseLoseModal = useCallback((): void => {
+    setShowLoseModal(false);
+  }, []);
+
+  // Мемоизация валидного avatarId
+  const validAvatarId = useMemo(() => {
+    if (!profile) return "avatar-01";
+    const normalized = AvatarValidator.validateAndNormalize(profile.avatarId);
+    return normalized || "avatar-01";
+  }, [profile]);
 
   // Обработка завершения игры
   useEffect(() => {
@@ -140,42 +184,28 @@ export default function Home() {
     );
   }
 
-  // Валидация avatarId из профиля
-  const validAvatarId =
-    profile && AvatarValidator.validateAndNormalize(profile.avatarId)
-      ? AvatarValidator.validateAndNormalize(profile.avatarId)!
-      : "avatar-01";
-
-  const handlePlayAgain = (): void => {
-    resetGame();
-    setShowWinModal(false);
-    setShowLoseModal(false);
-    setHasSentTelegramMessage(false);
-  };
-
-  const handleCloseWinModal = (): void => {
-    setShowWinModal(false);
-  };
-
-  const handleCloseLoseModal = (): void => {
-    setShowLoseModal(false);
-  };
-
   return (
     <main className={styles.main}>
       <div className={styles.container}>
         <header className={styles.header}>
-          {/* Logo */}
+          {/* User info - слева */}
+          <div className={styles.header__user}>
+            <Link href="/profile" className={styles.header__avatarLink}>
+              <UserAvatar avatarId={validAvatarId} size="small" showBorder={true} />
+            </Link>
+            <span className={styles.header__userName}>{profile?.name || "Игрок"}</span>
+          </div>
+
+          {/* Logo - по центру */}
           <div className={styles.header__logo}>
             <Logo href="/welcome" size="medium" />
           </div>
 
-          {/* User info */}
-          <div className={styles.header__user}>
-            <UserAvatar avatarId={validAvatarId} size="small" showBorder={true} />
-            <span className={styles.header__userName}>{profile?.name || "Игрок"}</span>
+          {/* Statistics - справа */}
+          <div className={styles.header__stats}>
             <Link href="/dashboard" className={styles.header__dashboardLink}>
-              📊 Статистика
+              <StatsIcon size={20} />
+              <span className={styles.header__dashboardText}>Статистика</span>
             </Link>
           </div>
         </header>
@@ -223,19 +253,24 @@ export default function Home() {
           )}
         </div>
 
-        <WinModal
-          isOpen={showWinModal}
-          onClose={handleCloseWinModal}
-          onPlayAgain={handlePlayAgain}
-          promoCode={promoCode || ""}
-        />
+        {/* Рендерим модальные окна только когда они нужны для предотвращения предзагрузки CSS */}
+        {showWinModal && (
+          <WinModal
+            isOpen={showWinModal}
+            onClose={handleCloseWinModal}
+            onPlayAgain={handlePlayAgain}
+            promoCode={promoCode || ""}
+          />
+        )}
 
-        <LoseModal
-          isOpen={showLoseModal}
-          onClose={handleCloseLoseModal}
-          onPlayAgain={handlePlayAgain}
-          isDraw={gameState.result === GameResultEnum.DRAW}
-        />
+        {showLoseModal && (
+          <LoseModal
+            isOpen={showLoseModal}
+            onClose={handleCloseLoseModal}
+            onPlayAgain={handlePlayAgain}
+            isDraw={gameState.result === GameResultEnum.DRAW}
+          />
+        )}
       </div>
     </main>
   );
