@@ -37,10 +37,9 @@ interface SafeErrorMessage {
 /**
  * Преобразует ошибку в безопасное сообщение для клиента
  * @param error - Ошибка (может быть любого типа)
- * @param context - Контекст ошибки (опционально)
  * @returns Безопасное сообщение об ошибке
  */
-function getSafeErrorMessage(error: unknown, context?: string): SafeErrorMessage {
+function getSafeErrorMessage(error: unknown): SafeErrorMessage {
   // Если это известная ошибка валидации
   if (error instanceof Error && error.message.includes("validation")) {
     return {
@@ -79,7 +78,7 @@ function getSafeErrorMessage(error: unknown, context?: string): SafeErrorMessage
  * @returns Ответ API с ошибкой
  */
 export function handleApiError(error: unknown, context?: string): ApiErrorResponse {
-  const safeError = getSafeErrorMessage(error, context);
+  const safeError = getSafeErrorMessage(error);
 
   // Логируем полную ошибку для разработчиков (только в dev режиме)
   if (process.env.NODE_ENV === "development") {
@@ -116,7 +115,6 @@ export function createValidationError(message: string): ApiErrorResponse {
  * @returns Ответ API с ошибкой rate limit
  */
 export function createRateLimitError(resetTime: number): ApiErrorResponse {
-  const resetDate = new Date(resetTime);
   const secondsUntilReset = Math.ceil((resetTime - Date.now()) / 1000);
 
   return {

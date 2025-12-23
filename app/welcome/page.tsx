@@ -5,8 +5,7 @@
  * Первый визит пользователя
  */
 
-import React, { useEffect, useRef } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { WelcomeHero } from "@/components/welcome/WelcomeHero";
 import { WelcomeFeatures } from "@/components/welcome/WelcomeFeatures";
@@ -17,7 +16,6 @@ import styles from "./page.module.css";
 
 export default function WelcomePage() {
   const router = useRouter();
-  const pathname = usePathname();
   const { profile, isLoading } = useUserProfile();
 
   // Если профиль еще загружается, показываем загрузку
