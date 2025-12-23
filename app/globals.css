@@ -1,3 +1,20 @@
+/* Подключение шрифта Inter через Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+/* CSS переменные для цветовой палитры */
+:root {
+  --color-primary: #ffb6c1; /* Мягкий розовый */
+  --color-accent: #e6e6fa; /* Лавандовый */
+  --color-background: #fff8dc; /* Кремовый */
+  --color-text: #4a4a4a; /* Темно-серый */
+  --color-text-light: #6a6a6a;
+  --color-white: #ffffff;
+  --color-border: #e0e0e0;
+  --color-shadow: rgba(0, 0, 0, 0.1);
+  --color-success: #90ee90;
+  --color-error: #ff6b6b;
+}
+
 * {
   box-sizing: border-box;
   padding: 0;
@@ -11,10 +28,11 @@ body {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  line-height: 1.6;
 }
-

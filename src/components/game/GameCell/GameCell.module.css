@@ -1,0 +1,87 @@
+/* Блок: gameCell */
+.gameCell {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 2px solid var(--color-primary);
+  background-color: var(--color-white);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  outline: none;
+  font-size: 48px;
+  font-weight: 700;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Модификатор: gameCell--clickable */
+.gameCell--clickable:hover {
+  background-color: var(--color-accent);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px var(--color-shadow);
+}
+
+.gameCell--clickable:active {
+  transform: scale(0.95);
+}
+
+/* Модификатор: gameCell--x */
+.gameCell--x {
+  color: var(--color-primary);
+}
+
+.gameCell--x .gameCell__symbol {
+  animation: cellAppear 0.3s ease-in;
+}
+
+/* Модификатор: gameCell--o */
+.gameCell--o {
+  color: var(--color-accent);
+}
+
+.gameCell--o .gameCell__symbol {
+  animation: cellAppear 0.3s ease-in;
+}
+
+/* Модификатор: gameCell--disabled */
+.gameCell--disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Элемент: gameCell__symbol */
+.gameCell__symbol {
+  display: block;
+  line-height: 1;
+}
+
+@keyframes cellAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.5) rotate(-180deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .gameCell {
+    font-size: 36px;
+    border-radius: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .gameCell {
+    font-size: 28px;
+    border-width: 1.5px;
+  }
+}
+

@@ -1,0 +1,35 @@
+/* Блок: gameBoard */
+.gameBoard {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+  max-width: 500px;
+  aspect-ratio: 1;
+  padding: 20px;
+  background: linear-gradient(135deg, var(--color-accent), var(--color-primary));
+  border-radius: 16px;
+  box-shadow: 0 8px 24px var(--color-shadow);
+  margin: 0 auto;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .gameBoard {
+    max-width: 400px;
+    gap: 10px;
+    padding: 16px;
+    border-radius: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .gameBoard {
+    max-width: 100%;
+    gap: 8px;
+    padding: 12px;
+    border-radius: 10px;
+  }
+}
+

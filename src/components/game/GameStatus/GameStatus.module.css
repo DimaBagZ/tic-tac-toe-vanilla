@@ -1,0 +1,86 @@
+/* Блок: gameStatus */
+.gameStatus {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background-color: var(--color-white);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px var(--color-shadow);
+  margin-bottom: 24px;
+}
+
+/* Элемент: gameStatus__text */
+.gameStatus__text {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text);
+  text-align: center;
+}
+
+/* Элемент: gameStatus__loader */
+.gameStatus__loader {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Элемент: gameStatus__loaderDot */
+.gameStatus__loaderDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  animation: loaderDot 1.4s infinite ease-in-out;
+}
+
+.gameStatus__loaderDot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.gameStatus__loaderDot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+.gameStatus__loaderDot:nth-child(3) {
+  animation-delay: 0s;
+}
+
+@keyframes loaderDot {
+  0%,
+  80%,
+  100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .gameStatus {
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+
+  .gameStatus__text {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .gameStatus {
+    padding: 12px;
+    margin-bottom: 16px;
+  }
+
+  .gameStatus__text {
+    font-size: 16px;
+  }
+}
+
