@@ -1,0 +1,26 @@
+{
+  "name": "tic-tac-toe-vanilla",
+  "version": "0.1.0",
+  "private": true,
+  "author": "DimaBagZ",
+  "description": "Игра крестики-нолики против компьютера с интеграцией Telegram-бота",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "next": "^16.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5.9.2",
+    "eslint": "^9",
+    "eslint-config-next": "^16.1.1"
+  }
+}
